@@ -41,7 +41,9 @@ function createItem(tableName, item) {
 
 function updateItem(tableName, item) {
   let itemO = deleteById(tableName, item.id, true);
+  console.log(item);
   itemO = Object.assign(item);
+  console.log(itemO);
   return createItem(tableName, itemO);
 }
 
@@ -59,6 +61,7 @@ function deleteById(tableName, itemId, update = false) {
     if (!update) {
       // удаляем tasks связанные по id
     }
+    return data[tableName].splice(itemIndex, 1)[0];
   } else if (tableName === tableNames.Tasks) {
   }
 }

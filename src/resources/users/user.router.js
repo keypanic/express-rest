@@ -4,27 +4,37 @@ const usersService = require('./user.service');
 const validateUser = require('./user.validation');
 
 router.route('/').get(async (req, res) => {
-  const users = await usersService.getAll();
-  // map user fields to exclude secret fields like "password"
-  res.json(users.map(User.toResponse));
+  try {
+    const users = await usersService.getAll();
+    console.log(users);
+    res.status(200).json(users.map(User.toResponse));
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
 });
 
 router.route('/:userId').get(async (req, res) => {
-  const user = await usersService.getById(req.params.userId);
-  console.log(`getUser ${User.toResponse(user)}, byId ${req.params.userId}`);
-  res.status(200);
-  res.json(User.toResponse(user));
+  try {
+    const user = await usersService.getById(req.params.userId);
+    res.status(200).json(User.toResponse(user));
+  } catch (err) {
+    res.status(401).json(err.message);
+  }
 });
 
 // TODO add validation
 router.route('/').post(async (req, res) => {
-  const user = new User({
-    name: req.body.name,
-    login: req.body.login,
-    password: req.body.password
-  });
-  const newUser = await usersService.createUser(user);
-  res.status(200).json(User.toResponse(newUser));
+  try {
+    const user = new User({
+      name: req.body.name,
+      login: req.body.login,
+      password: req.body.password
+    });
+    const newUser = await usersService.createUser(user);
+    res.status(200).json(User.toResponse(newUser));
+  } catch (err) {
+    res.status(400).json(err.message);
+  }
 });
 
 // // UPDATE
@@ -39,22 +49,27 @@ router.route('/:userId').put(async (req, res) => {
   if (validateUser.isEmptyOrNull(user)) {
     res.status(401).json('Access token is missing or invalid');
   } else {
-    const updatedUser = await usersService.updateUser(user);
-    console.log(updatedUser);
-    res.status(200).json(User.toResponse(updatedUser));
+    try {
+      const updatedUser = await usersService.updateUser(user);
+      res.status(200).json(User.toResponse(updatedUser));
+    } catch (err) {
+      res.status(400).json(err.message);
+    }
   }
 });
 
 // DELETE
 router.route('/:userId').delete(async (req, res) => {
-  console.log(`delete user: ${req.params.userId}`);
-  const user = await usersService.deleteById(req.params.userId);
-  if (!req.params.userId) {
-    res.status(401).json('Access token is missing or invalid');
-  } else if (user) {
-    res.status(204).json(User.toResponse(user));
-  } else {
-    res.status(404).json('User not found');
+  try {
+    console.log(`delete user: ${req.params.userId}`);
+    const user = await usersService.deleteById(req.params.userId);
+    if (!req.params.userId) {
+      res.status(401).json('Access token is missing or invalid');
+    } else {
+      res.status(204).json(User.toResponse(user));
+    }
+  } catch (err) {
+    res.status(404).json(err.message);
   }
 });
 
