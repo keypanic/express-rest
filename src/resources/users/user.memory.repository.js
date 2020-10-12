@@ -1,4 +1,4 @@
-const { users } = require('./../../common/userData');
+const { users } = require('./../../common/database');
 
 const getAll = async () => {
   users.forEach(user => console.log(user.id));

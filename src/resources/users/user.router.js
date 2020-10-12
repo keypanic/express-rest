@@ -36,9 +36,6 @@ router.route('/:userId').put(async (req, res) => {
     login: req.body.login,
     password: req.body.password
   });
-  // validateUser
-  //   .isEmptyOrNullPromise(user)
-  //   .catch(res.status(401).send('Access token is missing or invalid'));
   if (validateUser.isEmptyOrNull(user)) {
     res.status(401).json('Access token is missing or invalid');
   } else {
