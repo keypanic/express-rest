@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const User = require('./user.model');
-const userService = require('./user.service');
 const usersService = require('./user.service');
 const validateUser = require('./user.validation');
 
@@ -11,7 +10,7 @@ router.route('/').get(async (req, res) => {
 });
 
 router.route('/:userId').get(async (req, res) => {
-  const user = await userService.getById(req.params.userId);
+  const user = await usersService.getById(req.params.userId);
   console.log(`getUser ${User.toResponse(user)}, byId ${req.params.userId}`);
   res.status(200);
   res.json(User.toResponse(user));
@@ -24,7 +23,7 @@ router.route('/').post(async (req, res) => {
     login: req.body.login,
     password: req.body.password
   });
-  const newUser = await userService.createUser(user);
+  const newUser = await usersService.createUser(user);
   res.status(200).json(User.toResponse(newUser));
 });
 
@@ -43,7 +42,7 @@ router.route('/:userId').put(async (req, res) => {
   if (validateUser.isEmptyOrNull(user)) {
     res.status(401).json('Access token is missing or invalid');
   } else {
-    const updatedUser = await userService.updateUser(user);
+    const updatedUser = await usersService.updateUser(user);
     console.log(updatedUser);
     res.status(200).json(User.toResponse(updatedUser));
   }
@@ -52,7 +51,7 @@ router.route('/:userId').put(async (req, res) => {
 // DELETE
 router.route('/:userId').delete(async (req, res) => {
   console.log(`delete user: ${req.params.userId}`);
-  const user = await userService.deleteById(req.params.userId);
+  const user = await usersService.deleteById(req.params.userId);
   if (!req.params.userId) {
     res.status(401).json('Access token is missing or invalid');
   } else if (user) {

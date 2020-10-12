@@ -1,5 +1,5 @@
-const User = require('./user.model');
-const { v4: uuidv4 } = require('uuid');
+const { users } = require('./../../common/userData');
+
 const getAll = async () => {
   users.forEach(user => console.log(user.id));
   return users;
@@ -50,33 +50,10 @@ module.exports = {
  * `DELETE /users/:id` - delete user
  */
 
-const users = [
-  userTemplate(uuidv4(), 'user1', 'login1', 'password1'),
-  userTemplate(uuidv4(), 'user2', 'login2', 'password2'),
-  userTemplate(uuidv4(), 'user3', 'login3', 'password3') // ,
-  // userTemplate(uuidv4(), 'user4', 'login4', 'password4'),
-  // userTemplate(uuidv4(), 'user5', 'login5', 'password5'),
-  // userTemplate(uuidv4(), 'user6', 'login6', 'password6'),
-  // userTemplate(uuidv4(), 'user7', 'login7', 'password7'),
-  // userTemplate(uuidv4(), 'user8', 'login8', 'password8'),
-  // userTemplate(uuidv4(), 'user9', 'login9', 'password9'),
-  // userTemplate(uuidv4(), 'user10', 'login10', 'password10'),
-  // userTemplate(uuidv4(), 'user11', 'login11', 'password11')
-];
-
 // return -1 of not exist, or return user index
 function getUserIndex(userId) {
   if (!users.length) return -1;
   return users.findIndex(user => {
     return user.id === userId;
-  });
-}
-
-function userTemplate(userId, userName, userLogin, userPassword) {
-  return new User({
-    id: userId,
-    name: userName,
-    login: userLogin,
-    password: userPassword
   });
 }
