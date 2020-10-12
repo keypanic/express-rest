@@ -8,9 +8,9 @@ class User {
     password = 'P@55w0rd'
   } = {}) {
     this.id = id;
-    this.name = name;
-    this.login = login;
-    this.password = password;
+    this.name = name; // not null
+    this.login = login; // not null
+    this.password = password; // not null
   }
 
   static toResponse(user) {
