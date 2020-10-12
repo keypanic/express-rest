@@ -27,7 +27,6 @@ router.route('/').post(async (req, res) => {
       columns: req.body.columns
     });
     const board = await boardsService.createBoard(newBoard);
-    console.log(`create board: ${board.id}`);
     res.status(200).json(Board.toResponse(board));
   } catch (err) {
     res.status(400).json(err.message);
@@ -50,7 +49,6 @@ router.route('/:boardId').put(async (req, res) => {
 
 router.route('/:boardId').delete(async (req, res) => {
   try {
-    console.log(`delete: ${req.params.boardId}`);
     const board = await boardsService.deleteById(req.params.boardId);
     res.status(200).json(Board.toResponse(board));
   } catch (err) {

@@ -1,5 +1,6 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
+const Task = require('../resources/tasks/task.model');
 
 const tableNames = {
   Users: 'USERS',
@@ -8,21 +9,62 @@ const tableNames = {
 };
 
 // id, title, order, description, userId, /*assignee*/ boardId, columnId
-const tasks = [];
+const tasks = [
+  taskTemplate(
+    'task1_user1',
+    0,
+    'task1_description board 1',
+    'some stuff',
+    '1',
+    '1'
+  ),
+  taskTemplate(
+    'task2_user1',
+    0,
+    'task2_description board 2',
+    'some stuff',
+    '1',
+    '2'
+  ),
+  taskTemplate(
+    'task3_user2',
+    0,
+    'task3_description board 2',
+    'some stuff',
+    '2',
+    '2'
+  ),
+  taskTemplate(
+    'task4_user3',
+    0,
+    'task4_description board 3',
+    'some stuff',
+    '3',
+    '3'
+  ),
+  taskTemplate(
+    'task5_user3',
+    0,
+    'task5_description board 1',
+    'some stuff',
+    '3',
+    '1'
+  )
+];
 
 // id, name, login, password
 const users = [
-  userTemplate('user1', 'login1', 'password1'),
-  userTemplate('user2', 'login2', 'password2'),
-  userTemplate('user3', 'login3', 'password3')
+  userTemplate('1', 'user1', 'login1', 'password1'),
+  userTemplate('2', 'user2', 'login2', 'password2'),
+  userTemplate('3', 'user3', 'login3', 'password3')
 ];
 
 // set of columns
 // id, title, columns
 const boards = [
-  boardsTemplate('board1', 'columns1'),
-  boardsTemplate('board2', 'columns2'),
-  boardsTemplate('board3', 'columns3')
+  boardsTemplate('1', 'board1', 'columns1'),
+  boardsTemplate('2', 'board2', 'columns2'),
+  boardsTemplate('3', 'board3', 'columns3')
 ];
 
 function getAll(tableName) {
@@ -40,36 +82,73 @@ function createItem(tableName, item) {
 }
 
 function updateItem(tableName, item) {
-  let itemO = deleteById(tableName, item.id, true);
-  console.log(item);
+  let itemO = deleteById(tableName, item.id, false);
   itemO = Object.assign(item);
-  console.log(itemO);
   return createItem(tableName, itemO);
 }
 
-function deleteById(tableName, itemId, update = false) {
+function deleteById(tableName, itemId, deleteTasks = true) {
   const itemIndex = getItemIndex(tableName, itemId);
   if (itemIndex < 0) {
     throw Error(`No ${tableName} find for deletion. ${itemId}`);
   }
   if (tableName === tableNames.Boards) {
-    if (!update) {
-      // удаляем tasks связанные по id
+    if (deleteTasks) {
+      // NOT WORKING IN AUTOTEST, but works in SWAGGER !?
+      const tmpArray = data[tableNames.Tasks].filter(
+        item => item.boardId !== itemId
+      );
+      data[tableNames.Tasks] = tmpArray;
     }
     return data[tableName].splice(itemIndex, 1)[0];
   } else if (tableName === tableNames.Users) {
-    if (!update) {
-      // удаляем tasks связанные по id
+    if (deleteTasks) {
+      // NOT WORKING IN AUTOTEST, but works in SWAGGER !?
+      data[tableNames.Tasks].forEach((el, i, array) => {
+        if (el.userId === itemId) array[i].userId = null;
+      });
     }
     return data[tableName].splice(itemIndex, 1)[0];
   } else if (tableName === tableNames.Tasks) {
   }
 }
 
+function getAllBoardTasks(boardId) {
+  return data[tableNames.Tasks].filter(el => el.boardId === boardId);
+}
+
+function getTaskById(boardId, taskId) {
+  const tmp = data[tableNames.Tasks].find(
+    el => el.id === taskId && el.boardId === boardId
+  );
+  if (tmp) return tmp;
+  throw Error(`No task with ${boardId} and ${taskId}`);
+}
+
 function getItemIndex(tableName, itemId) {
   if (!data[tableName].length) throw Error(`Database ${tableName} is empty`);
   return data[tableName].findIndex(item => {
     return item.id === itemId;
+  });
+}
+
+function taskTemplate(
+  taskId,
+  taskTitle,
+  taskOrder,
+  taskDescription,
+  taskUserId,
+  taskBoardId,
+  taskColumnId
+) {
+  return new Task({
+    id: taskId,
+    title: taskOrder,
+    order: taskOrder,
+    description: taskDescription,
+    userId: taskUserId,
+    boardId: taskBoardId,
+    columnId: taskColumnId
   });
 }
 
@@ -110,6 +189,8 @@ module.exports = {
   createItem,
   updateItem,
   deleteById,
+  getAllBoardTasks,
+  getTaskById,
   tableNames,
   users
 };

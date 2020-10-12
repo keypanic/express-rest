@@ -6,7 +6,6 @@ const validateUser = require('./user.validation');
 router.route('/').get(async (req, res) => {
   try {
     const users = await usersService.getAll();
-    console.log(users);
     res.status(200).json(users.map(User.toResponse));
   } catch (err) {
     res.status(401).json(err.message);
@@ -39,7 +38,6 @@ router.route('/').post(async (req, res) => {
 
 // // UPDATE
 router.route('/:userId').put(async (req, res) => {
-  console.log('update user');
   const user = new User({
     id: req.params.userId,
     name: req.body.name,
@@ -61,7 +59,6 @@ router.route('/:userId').put(async (req, res) => {
 // DELETE
 router.route('/:userId').delete(async (req, res) => {
   try {
-    console.log(`delete user: ${req.params.userId}`);
     const user = await usersService.deleteById(req.params.userId);
     if (!req.params.userId) {
       res.status(401).json('Access token is missing or invalid');
