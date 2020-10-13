@@ -8,7 +8,7 @@ const createTask = task => tasksRepo.createTask(task);
 
 const updateTask = task => tasksRepo.updateTask(task);
 
-const deleteById = taskId => tasksRepo.deleteById(taskId);
+const deleteById = (boardId, taskId) => tasksRepo.deleteById(boardId, taskId);
 
 module.exports = {
   getAll,

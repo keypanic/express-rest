@@ -13,16 +13,12 @@ router.route('/').get(async (req, res) => {
 
 router.route('/').post(async (req, res) => {
   try {
-    // console.log(
-    //   `create  task bodyId: ${req.body.boardId}, req.params.boards ${req.params.boards}`
-    // );
-    // if (req.body.boardId !== req.params.boards) throw Error("board id's error");
     const tmpTask = new Task({
       title: req.body.title,
       order: req.body.order,
       description: req.body.description,
       userId: req.body.userId,
-      boardId: req.params.boards, // req.body.boardId,
+      boardId: req.params.boards,
       columnId: req.body.columnId
     });
     const newTask = await tasksService.createTask(tmpTask);
@@ -40,7 +36,38 @@ router.route('/:taskId').get(async (req, res) => {
     );
     res.status(200).json(Task.toResponse(task));
   } catch (err) {
-    res.status(401).json(err.message);
+    res.status(404).json(err.message);
+  }
+});
+
+router.route('/:taskId').put(async (req, res) => {
+  try {
+    const tmpTask = new Task({
+      id: req.params.taskId,
+      title: req.body.title,
+      order: req.body.order,
+      description: req.body.description,
+      userId: req.body.userId,
+      boardId: req.params.boards,
+      columnId: req.body.columnId
+    });
+    const newTask = await tasksService.updateTask(tmpTask);
+    res.status(200).json(Task.toResponse(newTask));
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json(err.message);
+  }
+});
+
+router.route('/:taskId').delete(async (req, res) => {
+  try {
+    const task = await tasksService.deleteById(
+      req.params.boards,
+      req.params.taskId
+    );
+    res.status(200).json(Task.toResponse(task));
+  } catch (err) {
+    res.status(404).json(err.message);
   }
 });
 

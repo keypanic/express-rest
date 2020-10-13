@@ -109,8 +109,19 @@ function deleteById(tableName, itemId, deleteTasks = true) {
       });
     }
     return data[tableName].splice(itemIndex, 1)[0];
-  } else if (tableName === tableNames.Tasks) {
   }
+  throw Error('Unknow tableName for delete');
+}
+
+function deleteTask(boardId, taskId) {
+  const taskIndex = getItemIndex(tableNames.Tasks, taskId);
+  if (taskIndex < 0) {
+    throw Error(`No ${taskIndex} find for deletion.`);
+  }
+  if (data[tableNames.Tasks][taskIndex].boardId !== boardId) {
+    throw Error(`Delete task error. Boards does not match ${boardId}`);
+  }
+  return data[tableNames.Tasks].splice(taskIndex, 1)[0];
 }
 
 function getAllBoardTasks(boardId) {
@@ -123,6 +134,12 @@ function getTaskById(boardId, taskId) {
   );
   if (tmp) return tmp;
   throw Error(`No task with ${boardId} and ${taskId}`);
+}
+
+function updateTask(task) {
+  let taskO = deleteTask(task.boardId, task.id);
+  taskO = Object.assign(task);
+  return createItem(tableNames.Tasks, taskO);
 }
 
 function getItemIndex(tableName, itemId) {
@@ -176,13 +193,6 @@ const data = {
   TASKS: tasks
 };
 
-// function initDB() {
-//   boardName = "board";
-//   for(let i = 1; i < 3; i++) {
-//     boards.push(boardTemplate(boardName + i);
-//   }
-// }
-
 module.exports = {
   getAll,
   getById,
@@ -191,6 +201,8 @@ module.exports = {
   deleteById,
   getAllBoardTasks,
   getTaskById,
+  updateTask,
+  deleteTask,
   tableNames,
   users
 };

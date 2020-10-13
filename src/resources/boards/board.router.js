@@ -7,7 +7,7 @@ router.route('/').get(async (req, res) => {
     const boards = await boardsService.getAll();
     res.status(200).json(boards.map(Board.toResponse));
   } catch (err) {
-    res.status(401).json(err.message);
+    res.status(404).json(err.message);
   }
 });
 
@@ -16,7 +16,7 @@ router.route('/:boardId').get(async (req, res) => {
     const board = await boardsService.getById(req.params.boardId);
     res.status(200).json(Board.toResponse(board));
   } catch (err) {
-    res.status(401).json(err.message);
+    res.status(404).json(err.message);
   }
 });
 
