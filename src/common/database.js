@@ -1,6 +1,7 @@
 const User = require('../resources/users/user.model');
 const Board = require('../resources/boards/board.model');
 const Task = require('../resources/tasks/task.model');
+const { NotFoundError } = require('../util/error/errors');
 
 const tableNames = {
   Users: 'USERS',
@@ -90,11 +91,10 @@ function updateItem(tableName, item) {
 function deleteById(tableName, itemId, deleteTasks = true) {
   const itemIndex = getItemIndex(tableName, itemId);
   if (itemIndex < 0) {
-    throw Error(`No ${tableName} find for deletion. ${itemId}`);
+    throw Error(`No ${tableName} find for deletion with id: ${itemId}`);
   }
   if (tableName === tableNames.Boards) {
     if (deleteTasks) {
-      // NOT WORKING IN AUTOTEST, but works in SWAGGER !?
       const tmpArray = data[tableNames.Tasks].filter(
         item => item.boardId !== itemId
       );
@@ -103,7 +103,6 @@ function deleteById(tableName, itemId, deleteTasks = true) {
     return data[tableName].splice(itemIndex, 1)[0];
   } else if (tableName === tableNames.Users) {
     if (deleteTasks) {
-      // NOT WORKING IN AUTOTEST, but works in SWAGGER !?
       data[tableNames.Tasks].forEach((el, i, array) => {
         if (el.userId === itemId) array[i].userId = null;
       });
@@ -119,7 +118,9 @@ function deleteTask(boardId, taskId) {
     throw Error(`No ${taskIndex} find for deletion.`);
   }
   if (data[tableNames.Tasks][taskIndex].boardId !== boardId) {
-    throw Error(`Delete task error. Boards does not match ${boardId}`);
+    throw new NotFoundError(
+      `Delete task error. Boards does not match ${boardId}`
+    );
   }
   return data[tableNames.Tasks].splice(taskIndex, 1)[0];
 }
@@ -133,7 +134,7 @@ function getTaskById(boardId, taskId) {
     el => el.id === taskId && el.boardId === boardId
   );
   if (tmp) return tmp;
-  throw Error(`No task with ${boardId} and ${taskId}`);
+  throw new NotFoundError(`No task with ${boardId} and ${taskId}`);
 }
 
 function updateTask(task) {

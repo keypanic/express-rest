@@ -1,4 +1,5 @@
 const db = require('./../../common/database');
+const { NotFoundError } = require('../../util/error/errors');
 const NAME = db.tableNames.Tasks;
 
 const getAll = async boardId => {
@@ -8,7 +9,7 @@ const getAll = async boardId => {
 const getById = async (boardId, taskId) => {
   const item = await db.getTaskById(boardId, taskId);
   if (item) return item;
-  throw Error(`Task not found: ${taskId}`);
+  throw new NotFoundError(`Task not found: ${taskId}`);
 };
 
 const createTask = async task => {

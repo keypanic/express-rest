@@ -1,4 +1,5 @@
 const db = require('./../../common/database');
+const { NotFoundError } = require('../../util/error/errors');
 const NAME = db.tableNames.Users;
 
 const getAll = async () => {
@@ -8,7 +9,7 @@ const getAll = async () => {
 const getById = async userId => {
   const item = await db.getById(NAME, userId);
   if (item) return item;
-  throw Error(`Not found: ${userId}`);
+  throw new NotFoundError(`UserId: ${userId}`);
 };
 
 const createUser = async user => {
