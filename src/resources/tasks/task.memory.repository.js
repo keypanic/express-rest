@@ -1,29 +1,36 @@
-const db = require('./../../common/database');
 const { NotFoundError } = require('../../util/error/errors');
-const NAME = db.tableNames.Tasks;
+const { taskModel } = require('../../common/mongoDB');
 
 const getAll = async boardId => {
-  return await db.getAllBoardTasks(boardId);
+  return await taskModel
+    .find({ boardId })
+    .orFail(new NotFoundError('board tasks not found'));
 };
 
 const getById = async (boardId, taskId) => {
-  const item = await db.getTaskById(boardId, taskId);
-  if (item) return item;
-  throw new NotFoundError(`Task not found: ${taskId}`);
+  return await taskModel
+    .findOne({ boardId, id: taskId })
+    .orFail(new NotFoundError('board tasks not found'));
 };
 
 const createTask = async task => {
-  return await db.createItem(NAME, task);
+  return await taskModel.create(task);
 };
 
 const updateTask = async task => {
-  const updatedBoard = await db.updateTask(task);
-  return updatedBoard;
+  return await taskModel.findOneAndUpdate({ id: task.id }, task);
 };
 
 const deleteById = async (boardId, taskId) => {
-  const task = await db.deleteTask(boardId, taskId);
-  return task;
+  return await taskModel.findOneAndDelete({ boardId, id: taskId });
+};
+
+const deleteByBoardId = async boardId => {
+  return await taskModel.deleteMany({ boardId });
+};
+
+const unassignUser = async userId => {
+  return await taskModel.updateMany({ userId }, { userId: null });
 };
 
 module.exports = {
@@ -31,5 +38,7 @@ module.exports = {
   getById,
   createTask,
   updateTask,
-  deleteById
+  deleteById,
+  deleteByBoardId,
+  unassignUser
 };

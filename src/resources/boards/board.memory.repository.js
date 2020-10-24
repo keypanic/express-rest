@@ -1,30 +1,29 @@
-const db = require('./../../common/database');
 const { NotFoundError } = require('../../util/error/errors');
-const NAME = db.tableNames.Boards;
+const { boardModel } = require('../../common/mongoDB');
 
 const getAll = async () => {
-  return await db.getAll(NAME);
+  return await boardModel.find();
 };
 
 const getById = async boardId => {
-  const item = await db.getById(NAME, boardId);
-  if (item) return item;
-  throw new NotFoundError(`Board not found: ${boardId}`);
+  return boardModel
+    .findOne({ id: boardId })
+    .orFail(new NotFoundError('board not found'));
 };
 
 const createBoard = async board => {
-  return await db.createItem(NAME, board);
+  return await boardModel.create(board);
 };
 
 const updateBoard = async board => {
-  const updatedBoard = await db.updateItem(NAME, board);
-  return updatedBoard;
+  return await boardModel.findOneAndUpdate({ id: board.id }, board);
 };
 
 // return deleted user or false if user not found
 const deleteById = async boardId => {
-  const board = await db.deleteById(NAME, boardId);
-  return board;
+  return await boardModel
+    .findOneAndDelete({ id: boardId })
+    .orFail(new NotFoundError('Bad operation'));
 };
 
 module.exports = {

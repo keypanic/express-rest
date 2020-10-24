@@ -33,10 +33,10 @@ logger.stream = {
   }
 };
 
-morgan.token('body', (req, res) => {
+morgan.token('body', req => {
   return JSON.stringify(req.body);
 });
-morgan.token('params', (req, res) => {
+morgan.token('params', req => {
   return JSON.stringify(req.params);
 });
 
