@@ -10,6 +10,9 @@ const tasksRouter = require('./resources/tasks/tasks.router');
 
 const errorFactory = require('./util/errorFactory');
 
+// TODO:
+// remove id duplicate
+// handle error: /users/123/123
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
 

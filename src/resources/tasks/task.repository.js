@@ -14,7 +14,10 @@ const getById = async (boardId, taskId) => {
 };
 
 const createTask = async task => {
-  return await taskModel.create(task);
+  return await taskModel.create(task).then(res => {
+    console.log(res);
+    return res;
+  });
 };
 
 const updateTask = async task => {

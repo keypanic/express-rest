@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const options = {
   file_info: {
     level: 'info',
-    filename: path.join(__dirname, '../logs/app.log'),
+    filename: path.join(__dirname, '../../logs/app.log'),
     handleExceptions: true,
     json: true,
     maxsize: 5242880, // 5MB
