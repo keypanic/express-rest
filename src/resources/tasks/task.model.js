@@ -9,7 +9,7 @@ class Task {
     boardId = 'boardId',
     columnId = 'columnId'
   } = {}) {
-    this.id = id;
+    this._id = id;
     this.title = title;
     this.order = order;
     this.description = description;
@@ -18,7 +18,6 @@ class Task {
     this.columnId = columnId;
   }
 
-  // id, title, order, description, userId, /*assignee*/ boardId, columnId
   static toResponse(task) {
     const { id, title, order, description, userId, boardId, columnId } = task;
     return { id, title, order, description, userId, boardId, columnId };

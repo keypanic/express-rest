@@ -29,7 +29,8 @@ router.route('/').post(async (req, res) => {
 
 // UPDATE
 router.route('/:userId').put(async (req, res) => {
-  const { id, name, login, password } = req.body;
+  const { name, login, password } = req.body;
+  const id = req.params.userId;
   await usersService
     .updateUser(new User({ id, name, login, password }))
     .then(user => {

@@ -7,7 +7,7 @@ class User {
     login = 'user',
     password = 'P@55w0rd'
   } = {}) {
-    this.id = id;
+    this._id = id;
     this.name = name; // not null
     this.login = login; // not null
     this.password = password; // not null

@@ -6,8 +6,9 @@ const getAll = async () => {
 };
 
 const getById = async boardId => {
+  console.log(`get board by id ${boardId}`);
   return boardModel
-    .findOne({ id: boardId })
+    .findById({ _id: boardId })
     .orFail(new NotFoundError('board not found'));
 };
 
@@ -16,13 +17,13 @@ const createBoard = async board => {
 };
 
 const updateBoard = async board => {
-  return await boardModel.findOneAndUpdate({ id: board.id }, board);
+  return await boardModel.findByIdAndUpdate(board._id, board);
 };
 
 // return deleted user or false if user not found
 const deleteById = async boardId => {
   return await boardModel
-    .findOneAndDelete({ id: boardId })
+    .findOneAndDelete({ _id: boardId })
     .orFail(new NotFoundError('Bad operation'));
 };
 

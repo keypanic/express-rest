@@ -48,7 +48,7 @@ router.route('/:taskId').put(async (req, res) => {
     columnId: req.body.columnId
   });
   await tasksService
-    .updateTask(new Task(tmpTask))
+    .updateTask(tmpTask)
     .then(task => {
       res.json(Task.toResponse(task));
     })

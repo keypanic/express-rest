@@ -7,7 +7,7 @@ const getAll = async () => {
 
 const getById = async userId => {
   return userModel
-    .findOne({ id: userId })
+    .findOne({ _id: userId })
     .orFail(new NotFoundError('user not found'));
 };
 
@@ -15,14 +15,12 @@ const createUser = async user => {
   return await userModel.create(user);
 };
 
-// WHAT IF NOT FIND? CallbacK?
 const updateUser = async user => {
-  return await userModel.findOneAndUpdate({ id: user.id }, user);
+  return await userModel.findByIdAndUpdate({ _id: user._id }, user);
 };
 
-// return deleted user or false if user not found
 const deleteById = async userId => {
-  return await userModel.findOneAndDelete({ id: userId });
+  return await userModel.findOneAndDelete({ _id: userId });
 };
 
 module.exports = {

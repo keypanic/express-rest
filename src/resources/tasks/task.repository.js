@@ -9,23 +9,20 @@ const getAll = async boardId => {
 
 const getById = async (boardId, taskId) => {
   return await taskModel
-    .findOne({ boardId, id: taskId })
+    .findOne({ boardId, _id: taskId })
     .orFail(new NotFoundError('board tasks not found'));
 };
 
 const createTask = async task => {
-  return await taskModel.create(task).then(res => {
-    console.log(res);
-    return res;
-  });
+  return await taskModel.create(task);
 };
 
 const updateTask = async task => {
-  return await taskModel.findOneAndUpdate({ id: task.id }, task);
+  return await taskModel.findByIdAndUpdate(task._id, task);
 };
 
 const deleteById = async (boardId, taskId) => {
-  return await taskModel.findOneAndDelete({ boardId, id: taskId });
+  return await taskModel.findOneAndDelete({ boardId, _id: taskId });
 };
 
 const deleteByBoardId = async boardId => {

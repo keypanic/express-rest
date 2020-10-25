@@ -1,14 +1,15 @@
 const { Schema } = require('mongoose');
+const uuid = require('uuid');
 
 const UserSchema = new Schema({
-  id: String,
+  _id: { type: String, default: uuid },
   name: String,
   login: String,
   password: String
 });
 
 const BoardSchema = new Schema({
-  id: String,
+  _id: { type: String, default: uuid },
   title: String,
   columns: [
     {
@@ -19,7 +20,7 @@ const BoardSchema = new Schema({
 });
 
 const TaskSchema = new Schema({
-  id: String,
+  _id: { type: String, default: uuid },
   title: String,
   order: Number,
   description: String,
