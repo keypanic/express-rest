@@ -2,7 +2,11 @@ const { NotFoundError } = require('../../util/error/errors');
 const { userModel } = require('../../common/mongoDB');
 
 const getAll = async () => {
-  return await userModel.find();
+  const usr = await userModel.find();
+  console.log(usr);
+  if (usr) console.log('IF TRUE');
+  else console.log('ELSE FALSE');
+  return usr;
 };
 
 const getById = async userId => {

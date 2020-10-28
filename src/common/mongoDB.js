@@ -7,6 +7,8 @@ mongoose.connect(MONGO_CONNECTION_STRING, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
+mongoose.set('returnOriginal', false);
+
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));

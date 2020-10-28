@@ -1,12 +1,11 @@
-const { NotFoundError } = require('../../util/error/errors');
+const { NotFoundError, BadRequestError } = require('../../util/error/errors');
 const { boardModel } = require('../../common/mongoDB');
 
 const getAll = async () => {
-  return await boardModel.find();
+  return await boardModel.find().orFail(new BadRequestError(' get all fail'));
 };
 
 const getById = async boardId => {
-  console.log(`get board by id ${boardId}`);
   return boardModel
     .findById({ _id: boardId })
     .orFail(new NotFoundError('board not found'));
@@ -17,14 +16,15 @@ const createBoard = async board => {
 };
 
 const updateBoard = async board => {
-  return await boardModel.findByIdAndUpdate(board._id, board);
+  return await boardModel
+    .findByIdAndUpdate(board._id, board)
+    .orFail(new BadRequestError(' update board fail '));
 };
 
-// return deleted user or false if user not found
 const deleteById = async boardId => {
   return await boardModel
     .findOneAndDelete({ _id: boardId })
-    .orFail(new NotFoundError('Bad operation'));
+    .orFail(new NotFoundError(' not found '));
 };
 
 module.exports = {

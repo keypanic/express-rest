@@ -1,5 +1,6 @@
 const {
   HTTP_NOT_FOUND,
+  HTTP_BAD_REQUEST,
   HTTP_INTERNAL_SERVER_ERROR
 } = require('../httpResponseCodes');
 
@@ -21,6 +22,15 @@ class NotFoundError extends HttpError {
     this.statusCode = HTTP_NOT_FOUND;
   }
 }
+class BadRequestError extends HttpError {
+  constructor(message, query) {
+    super(message);
+    this.message = message;
+    this.name = 'Bad request';
+    this.data = { message, query };
+    this.statusCode = HTTP_BAD_REQUEST;
+  }
+}
 class InternalServerError extends HttpError {
   constructor(message, query) {
     super(message);
@@ -32,6 +42,7 @@ class InternalServerError extends HttpError {
 }
 
 module.exports = {
+  BadRequestError,
   HttpError,
   NotFoundError,
   InternalServerError
