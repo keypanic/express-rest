@@ -2,7 +2,7 @@ const { NotFoundError, BadRequestError } = require('../../util/error/errors');
 const { boardModel } = require('../../common/mongoDB');
 
 const getAll = async () => {
-  return await boardModel.find().orFail(new BadRequestError(' get all fail'));
+  return await boardModel.find().orFail(new NotFoundError(' not found '));
 };
 
 const getById = async boardId => {

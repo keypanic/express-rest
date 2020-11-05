@@ -1,6 +1,7 @@
 const {
   HTTP_NOT_FOUND,
   HTTP_BAD_REQUEST,
+  HTTP_FORBIDDEN_ERROR,
   HTTP_INTERNAL_SERVER_ERROR
 } = require('../httpResponseCodes');
 
@@ -40,10 +41,20 @@ class InternalServerError extends HttpError {
     this.statusCode = HTTP_INTERNAL_SERVER_ERROR;
   }
 }
+class ForbiddenError extends HttpError {
+  constructor(message, query) {
+    super(message);
+    this.message = message;
+    this.name = 'Forbidden';
+    this.data = { message, query };
+    this.statusCode = HTTP_FORBIDDEN_ERROR;
+  }
+}
 
 module.exports = {
   BadRequestError,
   HttpError,
   NotFoundError,
+  ForbiddenError,
   InternalServerError
 };

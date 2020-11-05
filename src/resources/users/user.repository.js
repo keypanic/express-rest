@@ -1,16 +1,27 @@
-const { NotFoundError } = require('../../util/error/errors');
+const { NotFoundError, ForbiddenError } = require('../../util/error/errors');
 const { userModel } = require('../../common/mongoDB');
 
+// const login = async (login, password) => {
+//   // hash pasword
+//   // return await userModel
+// };
+
+const isLoginExists = async login => {
+  return await userModel.exists({ login });
+};
+
+const getUserByLogin = async login => {
+  return await userModel
+    .findOne({ login })
+    .orFail(new ForbiddenError('user not found'));
+};
+
 const getAll = async () => {
-  const usr = await userModel.find();
-  console.log(usr);
-  if (usr) console.log('IF TRUE');
-  else console.log('ELSE FALSE');
-  return usr;
+  return await userModel.find();
 };
 
 const getById = async userId => {
-  return userModel
+  return await userModel
     .findOne({ _id: userId })
     .orFail(new NotFoundError('user not found'));
 };
@@ -32,5 +43,7 @@ module.exports = {
   getById,
   createUser,
   updateUser,
-  deleteById
+  deleteById,
+  getUserByLogin,
+  isLoginExists
 };

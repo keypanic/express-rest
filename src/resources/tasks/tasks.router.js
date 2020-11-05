@@ -4,7 +4,7 @@ const tasksService = require('./task.service');
 
 router.route('/').get(async (req, res) => {
   await tasksService
-    .getAll(req.params.boards)
+    .getAll(req.params.boardId)
     .then(tasks => {
       res.json(tasks.map(Task.toResponse));
     })
@@ -17,7 +17,7 @@ router.route('/').post(async (req, res) => {
     order: req.body.order,
     description: req.body.description,
     userId: req.body.userId,
-    boardId: req.params.boards,
+    boardId: req.params.boardId,
     columnId: req.body.columnId
   });
   await tasksService
@@ -30,7 +30,7 @@ router.route('/').post(async (req, res) => {
 
 router.route('/:taskId').get(async (req, res) => {
   await tasksService
-    .getById(req.params.boards, req.params.taskId)
+    .getById(req.params.boardId, req.params.taskId)
     .then(task => {
       res.json(Task.toResponse(task));
     })
@@ -44,7 +44,7 @@ router.route('/:taskId').put(async (req, res) => {
     order: req.body.order,
     description: req.body.description,
     userId: req.body.userId,
-    boardId: req.params.boards,
+    boardId: req.params.boardId,
     columnId: req.body.columnId
   });
   await tasksService
@@ -57,7 +57,7 @@ router.route('/:taskId').put(async (req, res) => {
 
 router.route('/:taskId').delete(async (req, res) => {
   await tasksService
-    .deleteById(req.params.boards, req.params.taskId)
+    .deleteById(req.params.boardId, req.params.taskId)
     .then(task => {
       res.json(Task.toResponse(task));
     })

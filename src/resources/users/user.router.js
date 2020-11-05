@@ -2,6 +2,11 @@ const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
 router.route('/').get(async (req, res) => {
+  console.log(req.body);
+  console.log('-----------------');
+  console.log(req.token);
+  console.log('-----------------');
+  console.log(req.headers.authorization);
   await usersService
     .getAll()
     .then(users => {
